@@ -1,0 +1,50 @@
+﻿@page "/reverse-string"
+
+<PageTitle>Reverse A string</PageTitle>
+
+<h3>Reverse A String</h3>
+
+<div class="vstack gap-3 col-8 col-md-6">
+    <InputText class="form-control" placeholder="Enter a string to reverse" @bind-Value="message"></InputText>
+    <div class="text-end">
+        <button @onclick="ReverseString" class="btn btn-primary">
+            Reverse
+        </button>
+    </div>
+    <hr />
+    @if (reversedMessage != "")
+    {
+        @if (isPalindrome)
+        {
+            <Message displayMessage="@displayMessage" title="The message is a palindrome" />
+
+        }
+        else
+        {
+            <Message displayMessage="@displayMessage" title="The message is not a palindrome" cssClass="alert-danger" />
+        }
+
+    }
+</div>
+
+@code {
+    private string message = "Reverse Me";
+    private string reversedMessage = "";
+    private string displayMessage = "";
+    private bool isPalindrome = false;
+    private void ReverseString()
+    {
+        reversedMessage = new string(message.Reverse().ToArray());
+
+        displayMessage = $"The reverse of {message} is {reversedMessage}";
+
+        if (message == reversedMessage)
+        {
+            isPalindrome = true;
+        }
+        else
+        {
+            isPalindrome = false;
+        }
+    }
+}
