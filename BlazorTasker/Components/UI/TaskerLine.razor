@@ -1,7 +1,7 @@
 ﻿<div class="hstack">
-    <div><InputCheckbox @bind-Value="Item.IsComplete"></InputCheckbox></div>
-    <div class="px-2 flex-grow-1">@Item.Name</div>
-    <div><i class="bi bi-trash-fill text-danger"></i></div>
+    <div><InputCheckbox @bind-Value="Item.IsComplete" @bind-Value:after="UpdateItem"></InputCheckbox></div>
+    <div class="px-2 flex-grow-1 @(Item.IsComplete ? "complete" : "")">@Item.Name</div>
+    <div><a @onclick="DeleteItem"><i class="bi bi-trash-fill text-danger"></i></a></div>
 </div>
 
 @code {
@@ -10,4 +10,23 @@
     /// </summary>
     [Parameter, EditorRequired]
     public TaskerItem? Item { get; set; }
+
+    /// <summary>
+    /// Delete item callback.
+    /// </summary>
+    [Parameter]
+    public EventCallback<TaskerItem> OnDeleteCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<TaskerItem> OnCompleteCallback { get; set; }
+
+    public async Task DeleteItem()
+    {
+        await OnDeleteCallback.InvokeAsync(Item);
+    }
+
+    public async Task UpdateItem()
+    {
+        await OnCompleteCallback.InvokeAsync(Item);
+    }
 }
