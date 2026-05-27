@@ -22,7 +22,7 @@
         <div class="vstack">
             @foreach(TaskerItem item in taskerItems)
             {
-                <TaskerLine Item="item" OnDeleteCallback="@DeleteTask"/>
+                <TaskerLine Item="item" OnDeleteCallback="@DeleteTask" OnCompleteCallback="@UpdateTask"/>
             }
         </div>
     </div>
@@ -55,11 +55,13 @@
     private async void DeleteTask(TaskerItem item)
     {
         taskerItems.Remove(item);
+
+        await SaveListAsync();
     }
 
     private async void UpdateTask(TaskerItem item)
     {
-        item.IsComplete = !item.IsComplete;
+        await SaveListAsync();
     }
 
     private async Task LoadListAsync()
