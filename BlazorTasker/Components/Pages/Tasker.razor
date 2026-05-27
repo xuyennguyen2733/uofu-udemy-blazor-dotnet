@@ -1,4 +1,7 @@
 ﻿@page "/tasker"
+@using System.Text.Json;
+@using System.Text.Json.Serialization;
+@inject IJSRuntime JS;
 
 <div class="d-flex align-items-center justify-content-center">
     <div class="task p-5">
@@ -29,11 +32,24 @@
     private TaskerItem ti = new();
     private List<TaskerItem> taskerItems = new();
 
-    private void AddTask()
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadListAsync();
+    }
+
+    private async void AddTask()
     {
         ti.Id = Guid.NewGuid();
         taskerItems.Add(ti);
         ti = new();
+
+        await SaveListAsync();
+    }
+
+    private async Task SaveListAsync()
+    {
+        string? taskerItemJson = JsonSerializer.Serialize(taskerItems);
+        await JS.InvokeVoidAsync("localStorage.setItem", "TaskerList", taskerItemJson);
     }
 
     private async void DeleteTask(TaskerItem item)
@@ -44,5 +60,19 @@
     private async void UpdateTask(TaskerItem item)
     {
         item.IsComplete = !item.IsComplete;
+    }
+
+    private async Task LoadListAsync()
+    {
+        try
+        {
+            string? taskerItemJson = await JS.InvokeAsync<string>("localStorage.getItem", "TaskerList") ?? "[]";
+
+            taskerItems = JsonSerializer.Deserialize<List<TaskerItem>>(taskerItemJson)!;
+        }
+        catch (Exception e)
+        {
+            taskerItems = new();
+        }
     }
 }
