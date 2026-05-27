@@ -12,7 +12,7 @@
             <EditForm Model="ti" OnValidSubmit="AddTask">
                 <DataAnnotationsValidator />
                 <div class="d-flex flex-row gap-2">
-                    <InputText class="form-control" placeholder="Enter a task" @bind-Value="ti.Name"/>
+                    <InputText @ref="textboxTask" class="form-control" placeholder="Enter a task" @bind-Value="ti.Name"/>
                     <button type="submit" class="btn btn-primary">Add</button>
                 </div>
                 <ValidationMessage For="() => ti.Name" />
@@ -31,10 +31,19 @@
 @code {
     private TaskerItem ti = new();
     private List<TaskerItem> taskerItems = new();
+    private InputText? textboxTask { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await LoadListAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await textboxTask!.Element!.Value.FocusAsync();
+        }
     }
 
     private async void AddTask()
@@ -44,6 +53,7 @@
         ti = new();
 
         await SaveListAsync();
+        await textboxTask!.Element!.Value.FocusAsync();
     }
 
     private async Task SaveListAsync()
