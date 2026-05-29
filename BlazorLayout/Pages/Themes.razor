@@ -1,0 +1,41 @@
+﻿@page "/themes"
+
+<PageTitle>Template Themes</PageTitle>
+
+<div class="mt-5">
+    <h1 class="text-center">Built in themes for your template</h1>
+</div>
+
+@code {
+    List<string> siteThemes = new()
+    {
+        "code-magic",
+        "blue",
+        "indigo",
+        "purple",
+        "pink",
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "teal",
+        "cyan",
+        "gray"
+    };
+
+    List<string> weights = new()
+    {
+        "core",
+        "100",
+        "150",
+        "200",
+        "300",
+        "400",
+        "500",
+        "600",
+        "700",
+        "800",
+        "850",
+        "900"
+    };
+}
